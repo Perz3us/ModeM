@@ -6,12 +6,12 @@
 
 generator client {
   provider = "prisma-client-js"
-  output   = "../generated/prisma"
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
 }
 
 enum Priority {
@@ -31,6 +31,8 @@ model User {
   email         String         @unique @db.VarChar(255)
   password      String
   nickName      String         @db.VarChar(60)
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
   subjects      Subject[]      @relation("creates")
   tasks         Task[]         @relation("creates")
   notes         Note[]         @relation("creates")
@@ -81,6 +83,7 @@ model Note {
   user      User     @relation("creates", fields: [userId], references: [id])
   subjectId Int?
   subject   Subject? @relation("linked_to", fields: [subjectId], references: [id])
+  title     String   @default("Untitled")
   content   String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

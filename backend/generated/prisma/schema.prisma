@@ -1,0 +1,139 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+enum Priority {
+  LOW
+  MEDIUM
+  HIGH
+}
+
+enum ReminderType {
+  ONCE
+  DAILY
+  WEEKLY
+}
+
+model User {
+  id            Int            @id @default(autoincrement())
+  email         String         @unique @db.VarChar(255)
+  password      String
+  nickName      String         @db.VarChar(60)
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+  subjects      Subject[]      @relation("creates")
+  tasks         Task[]         @relation("creates")
+  notes         Note[]         @relation("creates")
+  reminders     Reminder[]     @relation("sets")
+  studySessions StudySession[] @relation("tracks")
+  badges        Badge[]        @relation("earns")
+  progress      Progress[]     @relation("tracks")
+}
+
+model Subject {
+  id            Int            @id @default(autoincrement())
+  userId        Int
+  user          User           @relation("creates", fields: [userId], references: [id])
+  parentId      Int?
+  parent        Subject?       @relation("belongs_to", fields: [parentId], references: [id])
+  name          String
+  isArchived    Boolean
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+  children      Subject[]      @relation("belongs_to")
+  tasks         Task[]         @relation("associated_with")
+  notes         Note[]         @relation("linked_to")
+  reminders     Reminder[]     @relation("linked_to")
+  studySessions StudySession[] @relation("tracked_for")
+  progress      Progress[]     @relation("measured_for")
+}
+
+model Task {
+  id          Int       @id @default(autoincrement())
+  userId      Int
+  user        User      @relation("creates", fields: [userId], references: [id])
+  subjectId   Int?
+  subject     Subject?  @relation("associated_with", fields: [subjectId], references: [id])
+  title       String
+  description String?
+  dueDate     DateTime?
+  priority    Priority? @default(MEDIUM)
+  isCompleted Boolean   @default(false)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@index([userId, subjectId])
+}
+
+model Note {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  user      User     @relation("creates", fields: [userId], references: [id])
+  subjectId Int?
+  subject   Subject? @relation("linked_to", fields: [subjectId], references: [id])
+  content   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Reminder {
+  id                Int      @id @default(autoincrement())
+  userId            Int
+  user              User     @relation("sets", fields: [userId], references: [id])
+  subjectId         Int?
+  subject           Subject? @relation("linked_to", fields: [subjectId], references: [id])
+  title             String
+  type              String?
+  reminderTime      DateTime
+  isRecurring       Boolean  @default(false)
+  recurrencePattern String?
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+}
+
+model StudySession {
+  id         Int      @id @default(autoincrement())
+  userId     Int
+  user       User     @relation("tracks", fields: [userId], references: [id])
+  subjectId  Int?
+  subject    Subject? @relation("tracked_for", fields: [subjectId], references: [id])
+  startTime  DateTime
+  duration   Int
+  isPomodoro Boolean  @default(false)
+  createdAt  DateTime @default(now())
+}
+
+model Badge {
+  id          Int      @id @default(autoincrement())
+  userId      Int
+  user        User     @relation("earns", fields: [userId], references: [id])
+  name        String
+  description String?
+  earnedAt    DateTime @default(now())
+}
+
+model Progress {
+  id             Int      @id @default(autoincrement())
+  userId         Int
+  user           User     @relation("tracks", fields: [userId], references: [id])
+  subjectId      Int?
+  subject        Subject? @relation("measured_for", fields: [subjectId], references: [id])
+  period         String
+  tasksCompleted Int
+  timeSpent      Int
+  goalsAchieved  Int
+  recordedAt     DateTime @default(now())
+}
