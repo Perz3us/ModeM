@@ -75,7 +75,7 @@ ModeM is a comprehensive study companion application designed to help students m
 
 1.  **Clone the repository**
     ```bash
-    git clone <repository-url>
+    git clone https://github.com/SChandrajith/ModeM.git
     cd ModeM
     ```
 
