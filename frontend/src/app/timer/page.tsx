@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Play, Pause, RotateCcw, Coffee, Brain, BookOpen } from 'lucide-react';
+import { Play, Pause, RotateCcw, Coffee, Brain, BookOpen, CheckCircle2 } from 'lucide-react';
 import { useTimer } from '@/context/TimerContext';
 import api from '@/services/api';
 
@@ -25,7 +25,8 @@ export default function TimerPage() {
     formatTime, 
     progress,
     selectedSubjectId,
-    setSelectedSubjectId
+    setSelectedSubjectId,
+    finishSession
   } = useTimer();
 
   const [subjects, setSubjects] = useState<Subject[]>([]);
@@ -210,10 +211,30 @@ export default function TimerPage() {
           {isActive ? <Pause size={24} /> : <Play size={24} />}
           <span style={{ marginLeft: '0.5rem' }}>{isActive ? 'Pause' : 'Start'}</span>
         </button>
+        
+        {(isActive || timeLeft < (mode === 'custom' ? customMinutes * 60 : (mode === 'focus' ? 25 : (mode === 'short' ? 5 : 15)) * 60)) && (
+           <button 
+           onClick={finishSession}
+           className="btn"
+           style={{ 
+             width: '120px', 
+             height: '50px', 
+             fontSize: '1.1rem',
+             background: 'rgba(16, 185, 129, 0.1)',
+             color: 'var(--success)',
+             border: '1px solid rgba(16, 185, 129, 0.2)'
+           }}
+         >
+           <CheckCircle2 size={24} />
+           <span style={{ marginLeft: '0.5rem' }}>Finish</span>
+         </button>
+        )}
+
         <button 
           onClick={resetTimer}
           className="btn"
           style={{ width: '50px', height: '50px', background: 'var(--card-bg)', padding: 0 }}
+          title="Reset Timer"
         >
           <RotateCcw size={24} />
         </button>

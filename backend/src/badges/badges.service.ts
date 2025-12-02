@@ -12,7 +12,7 @@ export class BadgesService {
     // 1. First Steps: Complete your first study session
     if (event === 'SESSION_COMPLETED') {
       const sessionCount = await this.prisma.studySession.count({ where: { userId } });
-      if (sessionCount === 1) {
+      if (sessionCount >= 1) {
         badges.push({
           name: 'First Steps',
           description: 'Completed your first study session',
@@ -20,7 +20,7 @@ export class BadgesService {
       }
 
       // 2. Focus Master: Complete 10 study sessions
-      if (sessionCount === 10) {
+      if (sessionCount >= 10) {
         badges.push({
           name: 'Focus Master',
           description: 'Completed 10 study sessions',
@@ -47,7 +47,7 @@ export class BadgesService {
     // 3. Task Crusher: Complete 5 tasks
     if (event === 'TASK_COMPLETED') {
       const taskCount = await this.prisma.task.count({ where: { userId, isCompleted: true } });
-      if (taskCount === 5) {
+      if (taskCount >= 5) {
         badges.push({
           name: 'Task Crusher',
           description: 'Completed 5 tasks',

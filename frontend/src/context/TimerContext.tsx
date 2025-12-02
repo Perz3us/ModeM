@@ -20,6 +20,7 @@ interface TimerContextType {
   progress: number;
   selectedSubjectId: number | null;
   setSelectedSubjectId: (id: number | null) => void;
+  finishSession: () => void;
 }
 
 const TimerContext = createContext<TimerContextType | undefined>(undefined);
@@ -112,6 +113,36 @@ export function TimerProvider({ children }: { children: React.ReactNode }) {
     return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
   };
 
+  const finishSession = async () => {
+    if (!isActive && timeLeft === totalTime) return; // Nothing to save if not started
+
+    const elapsedSeconds = totalTime - timeLeft;
+    if (elapsedSeconds < 60) {
+      // Optional: Don't save if less than 1 minute? Or just save it.
+      // Let's save it for now, user explicitly clicked finish.
+    }
+
+    setIsActive(false);
+    
+    // Reset timer for next session
+    if (mode === 'focus') setTimeLeft(25 * 60);
+    if (mode === 'short') setTimeLeft(5 * 60);
+    if (mode === 'long') setTimeLeft(15 * 60);
+    if (mode === 'custom') setTimeLeft(customMinutes * 60);
+
+    try {
+      await api.post('/study-sessions', {
+        startTime: new Date(Date.now() - elapsedSeconds * 1000).toISOString(),
+        duration: elapsedSeconds,
+        isPomodoro: mode === 'focus',
+        ...(selectedSubjectId ? { subjectId: selectedSubjectId } : {}),
+      });
+      // toast.success('Session saved!'); 
+    } catch (error) {
+      console.error('Failed to save study session', error);
+    }
+  };
+
   const progress = totalTime > 0 ? (timeLeft / totalTime) * 100 : 0;
 
   return (
@@ -129,7 +160,8 @@ export function TimerProvider({ children }: { children: React.ReactNode }) {
       formatTime,
       progress,
       selectedSubjectId,
-      setSelectedSubjectId
+      setSelectedSubjectId,
+      finishSession
     }}>
       {children}
     </TimerContext.Provider>
