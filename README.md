@@ -2,7 +2,8 @@
 
 ModeM is a comprehensive, premium study companion application designed to help students master their productivity. It seamlessly combines task management, smart reminders, and focus tools into a beautiful, gamified experience.
 
-![ModeM Banner](frontend/public/banner-placeholder.png)
+![ModeM Banner]<img width="1896" height="855" alt="image" src="https://github.com/user-attachments/assets/af67e298-30b8-4f57-ac4b-852a8252e223" />
+
 
 ## 🚀 Key Features
 
