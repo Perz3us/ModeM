@@ -13,7 +13,7 @@ export class AuthService {
   ) {}
 
   async signUp(registerDto: RegisterDto) {
-    const { email, password, nickName } = registerDto;
+    const { email, password, nickName, mobileNumber } = registerDto;
 
     const existingUser = await this.prisma.user.findUnique({
       where: { email },
@@ -30,6 +30,7 @@ export class AuthService {
         email,
         password: hashedPassword,
         nickName,
+        mobileNumber,
       },
       select: {
         id: true,
@@ -84,6 +85,7 @@ export class AuthService {
         id: true,
         email: true,
         nickName: true,
+        mobileNumber: true,
       },
     });
 

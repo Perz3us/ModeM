@@ -56,13 +56,18 @@ export default function TimerPage() {
       flexDirection: 'column', 
       alignItems: 'center', 
       justifyContent: 'center',
-      minHeight: '80vh'
+      minHeight: '100%',
+      width: '100%',
+      flex: 1
     }}>
       <div style={{ marginBottom: '2rem', display: 'flex', gap: '1rem', flexWrap: 'wrap', justifyContent: 'center' }}>
         <button 
           onClick={() => changeMode('focus')}
           className={`btn ${mode === 'focus' ? 'btn-primary' : ''}`}
-          style={{ background: mode !== 'focus' ? 'var(--card-bg)' : undefined }}
+          style={{ 
+            background: mode !== 'focus' ? 'hsl(var(--muted))' : undefined,
+            color: mode !== 'focus' ? 'hsl(var(--muted-foreground))' : undefined
+          }}
         >
           <Brain size={18} style={{ marginRight: '0.5rem' }} />
           Focus
@@ -70,7 +75,10 @@ export default function TimerPage() {
         <button 
           onClick={() => changeMode('short')}
           className={`btn ${mode === 'short' ? 'btn-primary' : ''}`}
-          style={{ background: mode !== 'short' ? 'var(--card-bg)' : undefined }}
+          style={{ 
+            background: mode !== 'short' ? 'hsl(var(--muted))' : undefined,
+            color: mode !== 'short' ? 'hsl(var(--muted-foreground))' : undefined
+          }}
         >
           <Coffee size={18} style={{ marginRight: '0.5rem' }} />
           Short Break
@@ -78,7 +86,10 @@ export default function TimerPage() {
         <button 
           onClick={() => changeMode('long')}
           className={`btn ${mode === 'long' ? 'btn-primary' : ''}`}
-          style={{ background: mode !== 'long' ? 'var(--card-bg)' : undefined }}
+          style={{ 
+            background: mode !== 'long' ? 'hsl(var(--muted))' : undefined,
+            color: mode !== 'long' ? 'hsl(var(--muted-foreground))' : undefined
+          }}
         >
           <Coffee size={18} style={{ marginRight: '0.5rem' }} />
           Long Break
@@ -86,7 +97,10 @@ export default function TimerPage() {
         <button 
           onClick={() => changeMode('custom')}
           className={`btn ${mode === 'custom' ? 'btn-primary' : ''}`}
-          style={{ background: mode !== 'custom' ? 'var(--card-bg)' : undefined }}
+          style={{ 
+            background: mode !== 'custom' ? 'hsl(var(--muted))' : undefined,
+            color: mode !== 'custom' ? 'hsl(var(--muted-foreground))' : undefined
+          }}
         >
           <Brain size={18} style={{ marginRight: '0.5rem' }} />
           Custom
@@ -103,14 +117,21 @@ export default function TimerPage() {
             style={{ 
               width: '100%', 
               paddingLeft: '2.5rem',
+              paddingRight: '1rem',
+              paddingTop: '0.75rem',
+              paddingBottom: '0.75rem',
               appearance: 'none',
-              cursor: 'pointer'
+              cursor: 'pointer',
+              background: 'hsl(var(--card))',
+              border: '1px solid hsl(var(--border))',
+              color: 'hsl(var(--foreground))',
+              borderRadius: 'var(--radius)',
             }}
             disabled={isActive}
           >
-            <option value="">No Subject</option>
+            <option value="" style={{ color: 'hsl(var(--muted-foreground))' }}>No Subject</option>
             {subjects.map((subject) => (
-              <option key={subject.id} value={subject.id}>
+              <option key={subject.id} value={subject.id} style={{ color: 'hsl(var(--foreground))', background: 'hsl(var(--card))' }}>
                 {subject.name}
               </option>
             ))}
@@ -122,7 +143,7 @@ export default function TimerPage() {
               left: '0.75rem', 
               top: '50%', 
               transform: 'translateY(-50%)',
-              color: 'var(--text-muted)',
+              color: 'hsl(var(--muted-foreground))',
               pointerEvents: 'none'
             }} 
           />
@@ -144,7 +165,7 @@ export default function TimerPage() {
             cx="150"
             cy="150"
             r="140"
-            stroke="var(--card-border)"
+            stroke="hsl(var(--border))"
             strokeWidth="10"
             fill="transparent"
           />
@@ -152,7 +173,7 @@ export default function TimerPage() {
             cx="150"
             cy="150"
             r="140"
-            stroke="var(--primary)"
+            stroke="hsl(var(--primary))"
             strokeWidth="10"
             fill="transparent"
             strokeDasharray={2 * Math.PI * 140}
@@ -179,8 +200,8 @@ export default function TimerPage() {
                   fontWeight: 'bold',
                   background: 'transparent',
                   border: 'none',
-                  borderBottom: '2px solid var(--primary)',
-                  color: 'var(--foreground)',
+                  borderBottom: '2px solid hsl(var(--primary))',
+                  color: 'hsl(var(--foreground))',
                   width: '120px',
                   textAlign: 'center',
                   outline: 'none',
@@ -188,7 +209,7 @@ export default function TimerPage() {
                   padding: 0
                 }}
               />
-              <span style={{ fontSize: '1.5rem', color: 'var(--text-muted)', marginLeft: '0.5rem' }}>min</span>
+              <span style={{ fontSize: '1.5rem', color: 'hsl(var(--muted-foreground))', marginLeft: '0.5rem' }}>min</span>
             </div>
           ) : (
             <div style={{ fontSize: '4rem', fontWeight: 'bold', fontVariantNumeric: 'tabular-nums' }}>
@@ -196,7 +217,7 @@ export default function TimerPage() {
             </div>
           )}
           
-          <p style={{ color: 'var(--text-muted)', marginTop: '0.5rem' }}>
+          <p style={{ color: 'hsl(var(--muted-foreground))', marginTop: '0.5rem' }}>
             {isActive ? 'Stay focused!' : mode === 'custom' ? 'Press Enter to set' : 'Ready to start?'}
           </p>
         </div>
@@ -209,7 +230,7 @@ export default function TimerPage() {
           style={{ width: '120px', height: '50px', fontSize: '1.1rem' }}
         >
           {isActive ? <Pause size={24} /> : <Play size={24} />}
-          <span style={{ marginLeft: '0.5rem' }}>{isActive ? 'Pause' : 'Start'}</span>
+          <span>{isActive ? 'Pause' : 'Start'}</span>
         </button>
         
         {(isActive || timeLeft < (mode === 'custom' ? customMinutes * 60 : (mode === 'focus' ? 25 : (mode === 'short' ? 5 : 15)) * 60)) && (
@@ -226,14 +247,20 @@ export default function TimerPage() {
            }}
          >
            <CheckCircle2 size={24} />
-           <span style={{ marginLeft: '0.5rem' }}>Finish</span>
+           <span>Finish</span>
          </button>
         )}
 
         <button 
           onClick={resetTimer}
           className="btn"
-          style={{ width: '50px', height: '50px', background: 'var(--card-bg)', padding: 0 }}
+          style={{ 
+            width: '50px', 
+            height: '50px', 
+            background: 'hsl(var(--muted))', 
+            color: 'hsl(var(--muted-foreground))',
+            padding: 0 
+          }}
           title="Reset Timer"
         >
           <RotateCcw size={24} />

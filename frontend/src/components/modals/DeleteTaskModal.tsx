@@ -1,6 +1,7 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { X, AlertTriangle } from 'lucide-react';
 import api from '@/services/api';
 import toast from 'react-hot-toast';
@@ -13,9 +14,16 @@ interface DeleteTaskModalProps {
 }
 
 export default function DeleteTaskModal({ isOpen, onClose, onSuccess, task }: DeleteTaskModalProps) {
+  const [mounted, setMounted] = useState(false);
   const [loading, setLoading] = useState(false);
 
+  useEffect(() => {
+    setMounted(true);
+    return () => setMounted(false);
+  }, []);
+
   if (!isOpen || !task) return null;
+  if (!mounted) return null;
 
   const handleDelete = async () => {
     setLoading(true);
@@ -32,20 +40,9 @@ export default function DeleteTaskModal({ isOpen, onClose, onSuccess, task }: De
     }
   };
 
-  return (
-    <div style={{
-      position: 'fixed',
-      top: 0,
-      left: 0,
-      right: 0,
-      bottom: 0,
-      background: 'rgba(0, 0, 0, 0.5)',
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      zIndex: 1000
-    }}>
-      <div className="card" style={{ width: '100%', maxWidth: '400px', position: 'relative' }}>
+  return createPortal(
+    <div className="modal-overlay">
+      <div className="modal-card">
         <button 
           onClick={onClose}
           style={{
@@ -54,7 +51,7 @@ export default function DeleteTaskModal({ isOpen, onClose, onSuccess, task }: De
             right: '1rem',
             background: 'transparent',
             border: 'none',
-            color: 'var(--text-muted)',
+            color: 'hsl(var(--muted-foreground))',
             cursor: 'pointer'
           }}
         >
@@ -76,7 +73,7 @@ export default function DeleteTaskModal({ isOpen, onClose, onSuccess, task }: De
             <AlertTriangle size={24} />
           </div>
           <h2 style={{ fontSize: '1.5rem', fontWeight: 'bold', marginBottom: '0.5rem' }}>Delete Task</h2>
-          <p style={{ color: 'var(--text-muted)' }}>
+          <p style={{ color: 'hsl(var(--muted-foreground))' }}>
             Are you sure you want to delete <strong>{task.title}</strong>? This action cannot be undone.
           </p>
         </div>
@@ -86,7 +83,11 @@ export default function DeleteTaskModal({ isOpen, onClose, onSuccess, task }: De
             type="button" 
             onClick={onClose}
             className="btn"
-            style={{ background: 'transparent', border: '1px solid var(--card-border)' }}
+            style={{ 
+              background: 'transparent', 
+              border: '1px solid hsl(var(--border))',
+              color: 'hsl(var(--foreground))'
+            }}
           >
             Cancel
           </button>
@@ -101,6 +102,7 @@ export default function DeleteTaskModal({ isOpen, onClose, onSuccess, task }: De
           </button>
         </div>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 }

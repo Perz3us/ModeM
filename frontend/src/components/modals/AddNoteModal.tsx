@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { X, BookOpen } from 'lucide-react';
 import api from '@/services/api';
 import toast from 'react-hot-toast';
@@ -17,11 +18,17 @@ interface Subject {
 }
 
 export default function AddNoteModal({ isOpen, onClose, onSuccess }: AddNoteModalProps) {
+  const [mounted, setMounted] = useState(false);
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
   const [subjectId, setSubjectId] = useState<number | ''>('');
   const [subjects, setSubjects] = useState<Subject[]>([]);
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+    return () => setMounted(false);
+  }, []);
 
   useEffect(() => {
     if (isOpen) {
@@ -40,6 +47,7 @@ export default function AddNoteModal({ isOpen, onClose, onSuccess }: AddNoteModa
   };
 
   if (!isOpen) return null;
+  if (!mounted) return null;
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -65,20 +73,9 @@ export default function AddNoteModal({ isOpen, onClose, onSuccess }: AddNoteModa
     }
   };
 
-  return (
-    <div style={{
-      position: 'fixed',
-      top: 0,
-      left: 0,
-      right: 0,
-      bottom: 0,
-      background: 'rgba(0, 0, 0, 0.5)',
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      zIndex: 1000
-    }}>
-      <div className="card" style={{ width: '100%', maxWidth: '500px', position: 'relative', maxHeight: '90vh', overflowY: 'auto' }}>
+  return createPortal(
+    <div className="modal-overlay">
+      <div className="modal-card">
         <button 
           onClick={onClose}
           style={{
@@ -87,7 +84,7 @@ export default function AddNoteModal({ isOpen, onClose, onSuccess }: AddNoteModa
             right: '1rem',
             background: 'transparent',
             border: 'none',
-            color: 'var(--text-muted)',
+            color: 'hsl(var(--muted-foreground))',
             cursor: 'pointer'
           }}
         >
@@ -98,7 +95,7 @@ export default function AddNoteModal({ isOpen, onClose, onSuccess }: AddNoteModa
         
         <form onSubmit={handleSubmit}>
           <div style={{ marginBottom: '1rem' }}>
-            <label style={{ display: 'block', marginBottom: '0.5rem', color: 'var(--text-muted)' }}>
+            <label style={{ display: 'block', marginBottom: '0.5rem', color: 'hsl(var(--muted-foreground))' }}>
               Title
             </label>
             <input
@@ -112,7 +109,7 @@ export default function AddNoteModal({ isOpen, onClose, onSuccess }: AddNoteModa
           </div>
 
           <div style={{ marginBottom: '1rem' }}>
-            <label style={{ display: 'block', marginBottom: '0.5rem', color: 'var(--text-muted)' }}>
+            <label style={{ display: 'block', marginBottom: '0.5rem', color: 'hsl(var(--muted-foreground))' }}>
               Content
             </label>
             <textarea
@@ -127,17 +124,27 @@ export default function AddNoteModal({ isOpen, onClose, onSuccess }: AddNoteModa
           </div>
 
           <div style={{ marginBottom: '1.5rem' }}>
-            <label style={{ display: 'block', marginBottom: '0.5rem', color: 'var(--text-muted)' }}>
+            <label style={{ display: 'block', marginBottom: '0.5rem', color: 'hsl(var(--muted-foreground))' }}>
               <BookOpen size={14} style={{ display: 'inline', marginRight: '0.25rem' }} /> Subject
             </label>
             <select
               value={subjectId}
               onChange={(e) => setSubjectId(e.target.value ? Number(e.target.value) : '')}
               className="input"
+              style={{
+                width: '100%',
+                padding: '0.75rem 1rem 0.75rem 2.5rem',
+                appearance: 'none',
+                cursor: 'pointer',
+                background: 'hsl(var(--card))',
+                border: '1px solid hsl(var(--border))',
+                color: 'hsl(var(--foreground))',
+                borderRadius: 'var(--radius)',
+              }}
             >
-              <option value="">No Subject</option>
+              <option value="" style={{ color: 'hsl(var(--muted-foreground))' }}>No Subject</option>
               {subjects.map((subject) => (
-                <option key={subject.id} value={subject.id}>
+                <option key={subject.id} value={subject.id} style={{ background: 'hsl(var(--card))', color: 'hsl(var(--foreground))' }}>
                   {subject.name}
                 </option>
               ))}
@@ -149,7 +156,11 @@ export default function AddNoteModal({ isOpen, onClose, onSuccess }: AddNoteModa
               type="button" 
               onClick={onClose}
               className="btn"
-              style={{ background: 'transparent', border: '1px solid var(--card-border)' }}
+              style={{ 
+                background: 'transparent', 
+                border: '1px solid hsl(var(--border))',
+                color: 'hsl(var(--foreground))'
+              }}
             >
               Cancel
             </button>
@@ -163,6 +174,7 @@ export default function AddNoteModal({ isOpen, onClose, onSuccess }: AddNoteModa
           </div>
         </form>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 }

@@ -1,6 +1,7 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { X, AlertTriangle } from 'lucide-react';
 import api from '@/services/api';
 import toast from 'react-hot-toast';
@@ -18,9 +19,16 @@ interface DeleteNoteModalProps {
 }
 
 export default function DeleteNoteModal({ isOpen, onClose, onSuccess, note }: DeleteNoteModalProps) {
+  const [mounted, setMounted] = useState(false);
   const [loading, setLoading] = useState(false);
 
+  useEffect(() => {
+    setMounted(true);
+    return () => setMounted(false);
+  }, []);
+
   if (!isOpen || !note) return null;
+  if (!mounted) return null;
 
   const handleDelete = async () => {
     setLoading(true);
@@ -38,20 +46,9 @@ export default function DeleteNoteModal({ isOpen, onClose, onSuccess, note }: De
     }
   };
 
-  return (
-    <div style={{
-      position: 'fixed',
-      top: 0,
-      left: 0,
-      right: 0,
-      bottom: 0,
-      background: 'rgba(0, 0, 0, 0.5)',
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      zIndex: 1000
-    }}>
-      <div className="card" style={{ width: '100%', maxWidth: '400px', position: 'relative' }}>
+  return createPortal(
+    <div className="modal-overlay">
+      <div className="modal-card">
         <button 
           onClick={onClose}
           style={{
@@ -60,7 +57,7 @@ export default function DeleteNoteModal({ isOpen, onClose, onSuccess, note }: De
             right: '1rem',
             background: 'transparent',
             border: 'none',
-            color: 'var(--text-muted)',
+            color: 'hsl(var(--muted-foreground))',
             cursor: 'pointer'
           }}
         >
@@ -83,7 +80,7 @@ export default function DeleteNoteModal({ isOpen, onClose, onSuccess, note }: De
           </div>
           
           <h2 style={{ fontSize: '1.25rem', fontWeight: 'bold', marginBottom: '0.5rem' }}>Delete Note?</h2>
-          <p style={{ color: 'var(--text-muted)', marginBottom: '1.5rem' }}>
+          <p style={{ color: 'hsl(var(--muted-foreground))', marginBottom: '1.5rem' }}>
             Are you sure you want to delete "{note.title}"? This action cannot be undone.
           </p>
           
@@ -91,7 +88,11 @@ export default function DeleteNoteModal({ isOpen, onClose, onSuccess, note }: De
             <button 
               onClick={onClose}
               className="btn"
-              style={{ background: 'transparent', border: '1px solid var(--card-border)' }}
+              style={{ 
+                background: 'transparent', 
+                border: '1px solid hsl(var(--border))',
+                color: 'hsl(var(--foreground))'
+              }}
             >
               Cancel
             </button>
@@ -106,6 +107,7 @@ export default function DeleteNoteModal({ isOpen, onClose, onSuccess, note }: De
           </div>
         </div>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 }

@@ -12,24 +12,28 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   const pathname = usePathname();
-  const isAuthPage = pathname === '/login' || pathname === '/register';
+  const isAuthPage = pathname === '/login' || pathname === '/register' || pathname === '/';
 
   return (
     <html lang="en">
       <body>
         <AuthWrapper>
-          <div style={{ display: 'flex' }}>
+          <div className={!isAuthPage ? "main-layout" : ""}>
             {!isAuthPage && <Sidebar />}
-            <main style={{ 
-              flex: 1, 
-              marginLeft: isAuthPage ? 0 : 'var(--sidebar-width)', 
-              minHeight: '100vh',
-              padding: isAuthPage ? 0 : '2rem'
-            }}>
+            <main className={!isAuthPage ? "main-content" : ""}>
               {children}
             </main>
           </div>
-          <Toaster position="top-center" />
+          <Toaster 
+            position="top-center" 
+            toastOptions={{
+              style: {
+                background: 'hsl(var(--card))',
+                color: 'hsl(var(--foreground))',
+                border: '1px solid hsl(var(--border))',
+              },
+            }}
+          />
         </AuthWrapper>
       </body>
     </html>

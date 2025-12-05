@@ -1,4 +1,5 @@
 import { Module } from '@nestjs/common';
+import { ScheduleModule } from '@nestjs/schedule';
 import { AppController } from './app.controller';
 import { PrismaModule } from './prisma/prisma.module';
 import { ConfigModule } from '@nestjs/config';
@@ -37,6 +38,7 @@ import { DashboardModule } from './dashboard/dashboard.module';
     BadgesModule,
     ProgressModule,
     DashboardModule,
+    ScheduleModule.forRoot(),
   ],
   controllers: [AppController],
   providers: [],
@@ -44,6 +46,6 @@ import { DashboardModule } from './dashboard/dashboard.module';
 export class AppModule {
   constructor() {}
   onModuleInit() {
-    console.log('Module initialized');
+    // console.log('Module initialized');
   }
 }

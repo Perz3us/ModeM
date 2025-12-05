@@ -14,12 +14,14 @@ import {
   Key,
   Edit2,
   Bell,
-  Award
+  Award,
+  Phone
 } from 'lucide-react';
 import styles from './Sidebar.module.css';
 import { useAuth } from './AuthWrapper';
 import ChangeNicknameModal from './modals/ChangeNicknameModal';
 import ChangePasswordModal from './modals/ChangePasswordModal';
+import ChangeMobileNumberModal from './modals/ChangeMobileNumberModal';
 
 export default function Sidebar() {
   const pathname = usePathname();
@@ -27,6 +29,7 @@ export default function Sidebar() {
   const [showUserMenu, setShowUserMenu] = useState(false);
   const [showNicknameModal, setShowNicknameModal] = useState(false);
   const [showPasswordModal, setShowPasswordModal] = useState(false);
+  const [showMobileModal, setShowMobileModal] = useState(false);
 
   const navItems = [
     { name: 'Dashboard', href: '/dashboard', icon: LayoutDashboard },
@@ -79,23 +82,10 @@ export default function Sidebar() {
           </div>
 
           {showUserMenu && (
-            <div style={{
-              position: 'absolute',
-              bottom: '100%',
-              left: '0',
-              width: '100%',
-              background: 'var(--card-bg)',
-              border: '1px solid var(--card-border)',
-              borderRadius: '0.5rem',
-              padding: '0.5rem',
-              marginBottom: '0.5rem',
-              boxShadow: '0 4px 12px rgba(0,0,0,0.2)',
-              zIndex: 50
-            }}>
+            <div className={styles.menuDropdown}>
               <button 
                 onClick={() => { setShowNicknameModal(true); setShowUserMenu(false); }}
                 className={styles.menuItem}
-                style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', width: '100%', padding: '0.5rem', background: 'transparent', border: 'none', color: 'var(--foreground)', cursor: 'pointer', textAlign: 'left' }}
               >
                 <Edit2 size={16} />
                 <span>Change Nickname</span>
@@ -103,16 +93,21 @@ export default function Sidebar() {
               <button 
                 onClick={() => { setShowPasswordModal(true); setShowUserMenu(false); }}
                 className={styles.menuItem}
-                style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', width: '100%', padding: '0.5rem', background: 'transparent', border: 'none', color: 'var(--foreground)', cursor: 'pointer', textAlign: 'left' }}
               >
                 <Key size={16} />
                 <span>Change Password</span>
               </button>
-              <div style={{ height: '1px', background: 'var(--card-border)', margin: '0.5rem 0' }} />
+              <button 
+                onClick={() => { setShowMobileModal(true); setShowUserMenu(false); }}
+                className={styles.menuItem}
+              >
+                <Phone size={16} />
+                <span>Change WhatsApp Number</span>
+              </button>
+              <div style={{ height: '1px', background: 'hsl(var(--border) / 0.5)', margin: '0.5rem 0' }} />
               <button 
                 onClick={logout}
-                className={styles.menuItem}
-                style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', width: '100%', padding: '0.5rem', background: 'transparent', border: 'none', color: 'var(--warning)', cursor: 'pointer', textAlign: 'left' }}
+                className={`${styles.menuItem} ${styles.danger}`}
               >
                 <LogOut size={16} />
                 <span>Logout</span>
@@ -129,6 +124,14 @@ export default function Sidebar() {
       <ChangePasswordModal 
         isOpen={showPasswordModal} 
         onClose={() => setShowPasswordModal(false)} 
+      />
+      <ChangeMobileNumberModal
+        isOpen={showMobileModal}
+        onClose={() => setShowMobileModal(false)}
+        onMobileNumberUpdated={() => {
+          // Ideally fetch user or update context
+        }}
+        currentMobileNumber={user?.mobileNumber}
       />
     </>
   );

@@ -9,7 +9,6 @@ export class BadgesService {
   async checkAndAwardBadges(userId: number, event: 'SESSION_COMPLETED' | 'TASK_COMPLETED') {
     const badges: { name: string; description: string }[] = [];
 
-    // 1. First Steps: Complete your first study session
     if (event === 'SESSION_COMPLETED') {
       const sessionCount = await this.prisma.studySession.count({ where: { userId } });
       if (sessionCount >= 1) {
@@ -19,7 +18,6 @@ export class BadgesService {
         });
       }
 
-      // 2. Focus Master: Complete 10 study sessions
       if (sessionCount >= 10) {
         badges.push({
           name: 'Focus Master',
@@ -27,11 +25,9 @@ export class BadgesService {
         });
       }
 
-      // 4. Night Owl: Study between 10 PM and 4 AM
       const now = new Date();
       const hour = now.getHours();
       if (hour >= 22 || hour < 4) {
-        // Check if they already have it to avoid duplicates (optional, but good practice)
         const hasBadge = await this.prisma.badge.findFirst({
           where: { userId, name: 'Night Owl' },
         });
@@ -44,7 +40,6 @@ export class BadgesService {
       }
     }
 
-    // 3. Task Crusher: Complete 5 tasks
     if (event === 'TASK_COMPLETED') {
       const taskCount = await this.prisma.task.count({ where: { userId, isCompleted: true } });
       if (taskCount >= 5) {
@@ -55,9 +50,7 @@ export class BadgesService {
       }
     }
 
-    // Award badges
     for (const badge of badges) {
-      // Double check existence to be safe
       const exists = await this.prisma.badge.findFirst({
         where: { userId, name: badge.name },
       });

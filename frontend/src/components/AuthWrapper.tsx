@@ -8,6 +8,7 @@ interface User {
   id: string;
   email: string;
   nickName: string;
+  mobileNumber?: string;
 }
 
 interface AuthContextType {
@@ -40,7 +41,7 @@ export default function AuthWrapper({ children }: { children: React.ReactNode })
 
   const checkAuth = async () => {
     const token = localStorage.getItem('token');
-    const publicPaths = ['/login', '/register'];
+    const publicPaths = ['/login', '/register', '/'];
 
     if (!token) {
       if (!publicPaths.includes(pathname)) {
@@ -53,25 +54,18 @@ export default function AuthWrapper({ children }: { children: React.ReactNode })
       return;
     }
 
-    // If we have a token, we should be loading until we verify it
-    // Only set loading true if we are not already authorized (initial load)
     if (!authorized) setLoading(true);
 
     try {
       const response = await api.get('/auth/profile');
-      console.log('Auth check success:', response.data);
       setUser(response.data);
       setAuthorized(true);
       if (publicPaths.includes(pathname)) {
         router.push('/dashboard'); 
       }
     } catch (error) {
-      console.error('Token verification failed:', error);
-      // Only alert if we were previously authorized or if it's an explicit login attempt
-      // For background checks, maybe silent fail? 
-      // Keeping alert for now as per debugging request, but might be annoying for refresh.
       if (!authorized) {
-         alert(`Session verification failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
+         // alert(`Session verification failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
       }
       localStorage.removeItem('token');
       setAuthorized(false);
@@ -104,7 +98,7 @@ export default function AuthWrapper({ children }: { children: React.ReactNode })
   }
 
   // Prevent flashing of protected content
-  const publicPaths = ['/login', '/register'];
+  const publicPaths = ['/login', '/register', '/'];
   if (!authorized && !publicPaths.includes(pathname)) {
     return null; 
   }

@@ -43,12 +43,11 @@ export function TimerProvider({ children }: { children: React.ReactNode }) {
       }, 1000);
     } else if (timeLeft === 0 && isActive) {
       setIsActive(false);
-      // Play alarm sound
+      
       new Audio('https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3')
         .play()
         .catch((e) => console.error('Audio play failed', e));
 
-      // Save study session
       const saveSession = async () => {
         try {
           await api.post('/study-sessions', {
@@ -57,7 +56,6 @@ export function TimerProvider({ children }: { children: React.ReactNode }) {
             isPomodoro: mode === 'focus',
             ...(selectedSubjectId ? { subjectId: selectedSubjectId } : {}),
           });
-          // toast.success('Session recorded!'); // Need to import toast if we want this
         } catch (error) {
           console.error('Failed to save study session', error);
         }
@@ -114,17 +112,12 @@ export function TimerProvider({ children }: { children: React.ReactNode }) {
   };
 
   const finishSession = async () => {
-    if (!isActive && timeLeft === totalTime) return; // Nothing to save if not started
+    if (!isActive && timeLeft === totalTime) return;
 
     const elapsedSeconds = totalTime - timeLeft;
-    if (elapsedSeconds < 60) {
-      // Optional: Don't save if less than 1 minute? Or just save it.
-      // Let's save it for now, user explicitly clicked finish.
-    }
-
+    
     setIsActive(false);
     
-    // Reset timer for next session
     if (mode === 'focus') setTimeLeft(25 * 60);
     if (mode === 'short') setTimeLeft(5 * 60);
     if (mode === 'long') setTimeLeft(15 * 60);
@@ -137,7 +130,6 @@ export function TimerProvider({ children }: { children: React.ReactNode }) {
         isPomodoro: mode === 'focus',
         ...(selectedSubjectId ? { subjectId: selectedSubjectId } : {}),
       });
-      // toast.success('Session saved!'); 
     } catch (error) {
       console.error('Failed to save study session', error);
     }

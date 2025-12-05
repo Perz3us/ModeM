@@ -10,12 +10,12 @@ export class ProgressController {
 
   @Post()
   create(@Request() req, @Body() createProgressDto: CreateProgressDto) {
-    return this.progressService.create(req.user.sub, createProgressDto);
+    return this.progressService.create(req.user.id, createProgressDto);
   }
 
   @Get()
   findAll(@Request() req) {
-    return this.progressService.findAll(req.user.sub);
+    return this.progressService.findAll(req.user.id);
   }
 
   @Get('stats')
@@ -25,6 +25,6 @@ export class ProgressController {
 
   @Get(':id')
   findOne(@Request() req, @Param('id') id: string) {
-    return this.progressService.findOne(+id, req.user.sub);
+    return this.progressService.findOne(+id, req.user.id);
   }
 }

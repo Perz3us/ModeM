@@ -15,3 +15,9 @@ export class ChangePasswordDto {
   @MinLength(6)
   newPassword: string;
 }
+
+export class UpdateMobileNumberDto {
+  @IsString()
+  @MinLength(10)
+  mobileNumber: string;
+}

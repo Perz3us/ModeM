@@ -24,4 +24,9 @@ export class RegisterDto {
       'Password is too weak. It must contain at least one uppercase letter, one lowercase letter, one number, and be at least 8 characters long.',
   })
   password: string;
+
+  @IsString()
+  @MinLength(10)
+  @IsNotEmpty({ message: 'Mobile number should not be empty' }) // Optional: removing 'IsNotEmpty' if you want it distinct from 'IsOptional', but user asked to add it to form so likely required or just simple field
+  mobileNumber: string;
 }

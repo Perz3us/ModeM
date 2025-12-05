@@ -1,6 +1,7 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { X } from 'lucide-react';
 import api from '@/services/api';
 import toast from 'react-hot-toast';
@@ -11,11 +12,18 @@ interface ChangePasswordModalProps {
 }
 
 export default function ChangePasswordModal({ isOpen, onClose }: ChangePasswordModalProps) {
+  const [mounted, setMounted] = useState(false);
   const [oldPassword, setOldPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [loading, setLoading] = useState(false);
 
+  useEffect(() => {
+    setMounted(true);
+    return () => setMounted(false);
+  }, []);
+
   if (!isOpen) return null;
+  if (!mounted) return null;
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -34,20 +42,9 @@ export default function ChangePasswordModal({ isOpen, onClose }: ChangePasswordM
     }
   };
 
-  return (
-    <div style={{
-      position: 'fixed',
-      top: 0,
-      left: 0,
-      right: 0,
-      bottom: 0,
-      background: 'rgba(0, 0, 0, 0.5)',
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      zIndex: 1000
-    }}>
-      <div className="card" style={{ width: '100%', maxWidth: '400px', position: 'relative' }}>
+  return createPortal(
+    <div className="modal-overlay">
+      <div className="modal-card">
         <button 
           onClick={onClose}
           style={{
@@ -56,7 +53,7 @@ export default function ChangePasswordModal({ isOpen, onClose }: ChangePasswordM
             right: '1rem',
             background: 'transparent',
             border: 'none',
-            color: 'var(--text-muted)',
+            color: 'hsl(var(--muted-foreground))',
             cursor: 'pointer'
           }}
         >
@@ -67,7 +64,7 @@ export default function ChangePasswordModal({ isOpen, onClose }: ChangePasswordM
         
         <form onSubmit={handleSubmit}>
           <div style={{ marginBottom: '1rem' }}>
-            <label style={{ display: 'block', marginBottom: '0.5rem', color: 'var(--text-muted)' }}>
+            <label style={{ display: 'block', marginBottom: '0.5rem', color: 'hsl(var(--muted-foreground))' }}>
               Current Password
             </label>
             <input
@@ -77,12 +74,19 @@ export default function ChangePasswordModal({ isOpen, onClose }: ChangePasswordM
               className="input"
               required
               minLength={6}
-              style={{ width: '100%', padding: '0.75rem', borderRadius: '0.5rem', background: 'rgba(255,255,255,0.05)', border: '1px solid var(--card-border)', color: 'var(--foreground)' }}
+              style={{ 
+                width: '100%', 
+                padding: '0.75rem', 
+                borderRadius: '0.5rem', 
+                background: 'rgba(255,255,255,0.05)', 
+                border: '1px solid hsl(var(--border))', 
+                color: 'hsl(var(--foreground))' 
+              }}
             />
           </div>
 
           <div style={{ marginBottom: '1.5rem' }}>
-            <label style={{ display: 'block', marginBottom: '0.5rem', color: 'var(--text-muted)' }}>
+            <label style={{ display: 'block', marginBottom: '0.5rem', color: 'hsl(var(--muted-foreground))' }}>
               New Password
             </label>
             <input
@@ -92,7 +96,14 @@ export default function ChangePasswordModal({ isOpen, onClose }: ChangePasswordM
               className="input"
               required
               minLength={6}
-              style={{ width: '100%', padding: '0.75rem', borderRadius: '0.5rem', background: 'rgba(255,255,255,0.05)', border: '1px solid var(--card-border)', color: 'var(--foreground)' }}
+              style={{ 
+                width: '100%', 
+                padding: '0.75rem', 
+                borderRadius: '0.5rem', 
+                background: 'rgba(255,255,255,0.05)', 
+                border: '1px solid hsl(var(--border))', 
+                color: 'hsl(var(--foreground))' 
+              }}
             />
           </div>
           
@@ -101,7 +112,11 @@ export default function ChangePasswordModal({ isOpen, onClose }: ChangePasswordM
               type="button" 
               onClick={onClose}
               className="btn"
-              style={{ background: 'transparent', border: '1px solid var(--card-border)' }}
+              style={{ 
+                background: 'transparent', 
+                border: '1px solid hsl(var(--border))',
+                color: 'hsl(var(--foreground))'
+              }}
             >
               Cancel
             </button>
@@ -115,6 +130,7 @@ export default function ChangePasswordModal({ isOpen, onClose }: ChangePasswordM
           </div>
         </form>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 }

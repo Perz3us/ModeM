@@ -36,9 +36,11 @@ export class TaskController {
     @Query('dueSoon') dueSoon: boolean,
     @Query('priority') priority?: Priority,
     @Query('isCompleted') isCompleted?: boolean,
+    @Query('page') page: string = '1',
+    @Query('limit') limit: string = '10',
   ) {
     const filters = { subjectId, priority, isCompleted, dueSoon };
-    return this.taskService.findAll(req.user.id, filters);
+    return this.taskService.findAll(req.user.id, filters, +page, +limit);
   }
 
   @Get('statistics')

@@ -38,4 +38,13 @@ export class UsersService {
 
     return { message: 'Password updated successfully' };
   }
+
+  async updateMobileNumber(userId: number, mobileNumber: string) {
+    const user = await this.prisma.user.update({
+      where: { id: userId },
+      data: { mobileNumber },
+      select: { id: true, email: true, mobileNumber: true },
+    });
+    return user;
+  }
 }

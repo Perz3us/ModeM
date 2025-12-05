@@ -31,6 +31,7 @@ model User {
   email         String         @unique @db.VarChar(255)
   password      String
   nickName      String         @db.VarChar(60)
+  mobileNumber  String?        @db.VarChar(20)
   createdAt     DateTime       @default(now())
   updatedAt     DateTime       @updatedAt
   subjects      Subject[]      @relation("creates")
@@ -75,6 +76,8 @@ model Task {
   updatedAt   DateTime  @updatedAt
 
   @@index([userId, subjectId])
+  @@index([userId, isCompleted])
+  @@index([userId, dueDate])
 }
 
 model Note {
@@ -102,6 +105,8 @@ model Reminder {
   recurrencePattern String?
   createdAt         DateTime @default(now())
   updatedAt         DateTime @updatedAt
+
+  @@index([userId, reminderTime])
 }
 
 model StudySession {
@@ -114,6 +119,8 @@ model StudySession {
   duration   Int
   isPomodoro Boolean  @default(false)
   createdAt  DateTime @default(now())
+
+  @@index([userId, startTime])
 }
 
 model Badge {

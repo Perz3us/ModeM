@@ -23,11 +23,11 @@ interface Subject {
 }
 
 const COLORS = [
-  'var(--primary)',
-  'var(--secondary)',
-  'var(--accent)',
-  'var(--success)',
-  'var(--warning)',
+  'hsl(var(--primary))',
+  'hsl(var(--secondary))',
+  'hsl(var(--accent))',
+  'hsl(var(--success))',
+  'hsl(var(--warning))',
   '#EC4899', // Pink
   '#8B5CF6', // Violet
   '#10B981', // Emerald
@@ -83,30 +83,30 @@ export default function SubjectsPage() {
   };
 
   return (
-    <div className="container">
+    <div className="container animate-fade-in">
       <header style={{ 
         display: 'flex', 
         justifyContent: 'space-between', 
         alignItems: 'center', 
-        marginBottom: '2rem' 
+        marginBottom: '3rem' 
       }}>
         <div>
-          <h1 style={{ fontSize: '2rem', fontWeight: 'bold', marginBottom: '0.5rem' }}>Subjects</h1>
-          <p style={{ color: 'var(--text-muted)' }}>Manage your courses and track progress.</p>
+          <h1 style={{ fontSize: '2.5rem', fontWeight: '800', marginBottom: '0.5rem' }}>Subjects</h1>
+          <p style={{ color: 'hsl(var(--muted-foreground))', fontSize: '1.1rem' }}>Manage your courses and track progress.</p>
         </div>
         <button 
           className="btn btn-primary"
           onClick={() => setIsAddModalOpen(true)}
         >
-          <Plus size={20} style={{ marginRight: '0.5rem' }} />
+          <Plus size={20} />
           Add Subject
         </button>
       </header>
 
       {loading ? (
-        <div style={{ textAlign: 'center', padding: '2rem' }}>Loading subjects...</div>
+        <div style={{ textAlign: 'center', padding: '4rem', color: 'hsl(var(--muted-foreground))' }}>Loading subjects...</div>
       ) : subjects.length === 0 ? (
-        <div style={{ textAlign: 'center', padding: '4rem', color: 'var(--text-muted)' }}>
+        <div style={{ textAlign: 'center', padding: '4rem', color: 'hsl(var(--muted-foreground))' }}>
           <BookOpen size={48} style={{ marginBottom: '1rem', opacity: 0.5 }} />
           <p>No subjects found. Add your first subject to get started!</p>
         </div>
@@ -114,10 +114,10 @@ export default function SubjectsPage() {
         <div style={{ 
           display: 'grid', 
           gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', 
-          gap: '1.5rem' 
+          gap: '2rem' 
         }}>
           {subjects.map((subject) => (
-            <div key={subject.id} className="card" style={{ position: 'relative' }}>
+            <div key={subject.id} className="card" style={{ position: 'relative', overflow: 'hidden' }}>
               <div style={{ 
                 display: 'flex', 
                 justifyContent: 'space-between', 
@@ -125,10 +125,13 @@ export default function SubjectsPage() {
                 marginBottom: '1.5rem'
               }}>
                 <div style={{ 
-                  padding: '0.75rem', 
-                  borderRadius: '0.75rem', 
-                  background: `color-mix(in srgb, ${subject.color}, transparent 90%)`,
-                  color: subject.color
+                  padding: '1rem', 
+                  borderRadius: '1rem', 
+                  background: `color-mix(in srgb, ${subject.color}, transparent 85%)`,
+                  color: subject.color,
+                  display: 'flex', 
+                  alignItems: 'center', 
+                  justifyContent: 'center'
                 }}>
                   <BookOpen size={24} />
                 </div>
@@ -138,11 +141,17 @@ export default function SubjectsPage() {
                     style={{ 
                       background: 'transparent', 
                       border: 'none', 
-                      color: 'var(--text-muted)', 
+                      color: 'hsl(var(--muted-foreground))', 
                       cursor: 'pointer',
-                      padding: '0.25rem',
-                      borderRadius: '0.25rem'
+                      padding: '0.5rem',
+                      borderRadius: '0.5rem',
+                      transition: 'background 0.2s',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center'
                     }}
+                    onMouseEnter={(e) => e.currentTarget.style.background = 'hsl(var(--accent))'}
+                    onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}
                   >
                     <MoreVertical size={20} />
                   </button>
@@ -154,13 +163,14 @@ export default function SubjectsPage() {
                         position: 'absolute',
                         top: '100%',
                         right: 0,
-                        background: 'var(--card-bg)',
-                        border: '1px solid var(--card-border)',
-                        borderRadius: '0.5rem',
+                        background: 'hsl(var(--card))',
+                        border: '1px solid hsl(var(--border))',
+                        borderRadius: '0.75rem',
                         padding: '0.5rem',
-                        boxShadow: '0 4px 12px rgba(0,0,0,0.2)',
+                        boxShadow: '0 10px 30px -10px rgba(0,0,0,0.5)',
                         zIndex: 10,
-                        minWidth: '150px'
+                        minWidth: '160px',
+                        backdropFilter: 'blur(12px)'
                       }}
                     >
                       <button 
@@ -168,17 +178,19 @@ export default function SubjectsPage() {
                         style={{ 
                           display: 'flex', 
                           alignItems: 'center', 
-                          gap: '0.5rem', 
+                          gap: '0.75rem', 
                           width: '100%', 
-                          padding: '0.5rem', 
+                          padding: '0.75rem 1rem', 
                           background: 'transparent', 
                           border: 'none', 
-                          color: 'var(--foreground)', 
+                          color: 'hsl(var(--foreground))', 
                           cursor: 'pointer', 
                           textAlign: 'left',
-                          borderRadius: '0.25rem'
+                          borderRadius: '0.5rem',
+                          fontSize: '0.9rem',
+                          fontWeight: '500'
                         }}
-                        onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(255,255,255,0.05)'}
+                        onMouseEnter={(e) => e.currentTarget.style.background = 'hsl(var(--accent))'}
                         onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}
                       >
                         <Edit2 size={16} />
@@ -189,17 +201,19 @@ export default function SubjectsPage() {
                         style={{ 
                           display: 'flex', 
                           alignItems: 'center', 
-                          gap: '0.5rem', 
+                          gap: '0.75rem', 
                           width: '100%', 
-                          padding: '0.5rem', 
+                          padding: '0.75rem 1rem', 
                           background: 'transparent', 
                           border: 'none', 
-                          color: 'var(--error)', 
+                          color: 'hsl(var(--destructive))', 
                           cursor: 'pointer', 
                           textAlign: 'left',
-                          borderRadius: '0.25rem'
+                          borderRadius: '0.5rem',
+                          fontSize: '0.9rem',
+                          fontWeight: '500'
                         }}
-                        onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(255,255,255,0.05)'}
+                        onMouseEnter={(e) => e.currentTarget.style.background = 'hsl(var(--destructive) / 0.1)'}
                         onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}
                       >
                         <Trash2 size={16} />
@@ -210,29 +224,31 @@ export default function SubjectsPage() {
                 </div>
               </div>
 
-              <h3 style={{ fontSize: '1.25rem', fontWeight: 'bold', marginBottom: '0.5rem' }}>
+              <h3 style={{ fontSize: '1.25rem', fontWeight: '700', marginBottom: '0.5rem' }}>
                 {subject.name}
               </h3>
-              <p style={{ color: 'var(--text-muted)', fontSize: '0.875rem', marginBottom: '1.5rem' }}>
-                Next Task: {subject.nextExam}
+              <p style={{ color: 'hsl(var(--muted-foreground))', fontSize: '0.9rem', marginBottom: '1.5rem' }}>
+                {subject.nextExam ? `Next Exam: ${subject.nextExam}` : 'No upcoming exams'}
               </p>
 
-              <div style={{ marginBottom: '0.5rem', display: 'flex', justifyContent: 'space-between', fontSize: '0.875rem' }}>
+              <div style={{ marginBottom: '0.5rem', display: 'flex', justifyContent: 'space-between', fontSize: '0.85rem', fontWeight: '500' }}>
                 <span>Progress</span>
-                <span>{subject.progress}%</span>
+                <span>{subject.progress || 0}%</span>
               </div>
               <div style={{ 
                 width: '100%', 
-                height: '0.5rem', 
-                background: 'rgba(255,255,255,0.1)', 
-                borderRadius: '1rem',
-                overflow: 'hidden'
+                height: '0.625rem', 
+                background: 'hsl(var(--background))', 
+                borderRadius: '9999px',
+                overflow: 'hidden',
+                border: '1px solid hsl(var(--border) / 0.5)'
               }}>
                 <div style={{ 
-                  width: `${subject.progress}%`, 
+                  width: `${subject.progress || 0}%`, 
                   height: '100%', 
                   background: subject.color,
-                  borderRadius: '1rem'
+                  borderRadius: '9999px',
+                  transition: 'width 1s cubic-bezier(0.4, 0, 0.2, 1)'
                 }} />
               </div>
             </div>

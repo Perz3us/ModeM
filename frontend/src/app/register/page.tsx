@@ -11,21 +11,24 @@ import { toast } from 'react-hot-toast';
 export default function Register() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
   const [nickName, setNickName] = useState('');
+  const [mobileNumber, setMobileNumber] = useState('');
   const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (password !== confirmPassword) {
+      toast.error('Passwords do not match');
+      return;
+    }
     try {
-      // Assuming backend has a register endpoint at /auth/register
-      // and it returns an access_token or we need to login after
-      await api.post('/auth/register', { email, password, nickName });
+      await api.post('/auth/register', { email, password, nickName, mobileNumber });
       toast.success('Registration successful! Please login.');
       setTimeout(() => {
         router.push('/login');
       }, 2000);
     } catch (error) {
-      console.error('Registration failed', error);
       toast.error('Registration failed. Please try again.');
     }
   };
@@ -58,12 +61,35 @@ export default function Register() {
             />
           </div>
           <div className={styles.inputGroup}>
+            <label htmlFor="mobileNumber">WhatsApp Number</label>
+            <input
+              type="tel"
+              id="mobileNumber"
+              value={mobileNumber}
+              onChange={(e) => setMobileNumber(e.target.value)}
+              placeholder="e.g. +94 712345678"
+              required
+              className={styles.input}
+            />
+          </div>
+          <div className={styles.inputGroup}>
             <label htmlFor="password">Password</label>
             <input
               type="password"
               id="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
+              required
+              className={styles.input}
+            />
+          </div>
+          <div className={styles.inputGroup}>
+            <label htmlFor="confirmPassword">Confirm Password</label>
+            <input
+              type="password"
+              id="confirmPassword"
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
               required
               className={styles.input}
             />

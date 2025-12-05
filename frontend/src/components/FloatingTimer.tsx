@@ -2,24 +2,15 @@
 
 import { useTimer } from '@/context/TimerContext';
 import { usePathname, useRouter } from 'next/navigation';
-import { Play, Pause, X } from 'lucide-react';
+import { Play, Pause } from 'lucide-react';
 
 export default function FloatingTimer() {
   const { timeLeft, isActive, toggleTimer, formatTime, progress } = useTimer();
   const pathname = usePathname();
   const router = useRouter();
 
-  // Don't show on timer page or if timer is not active (optional, user might want to see it always if running)
-  // Let's show it if we are NOT on timer page AND (timer is active OR timeLeft < totalTime)
-  // Actually, user request: "move to top right corner and show the remaining time"
   if (pathname === '/timer') return null;
-  
-  // Only show if timer is running or paused mid-way? 
-  // Or always show if there is a session? 
-  // Let's show if isActive is true, OR if it was paused (implied by user wanting to see it).
-  // For simplicity, let's show it if isActive is true for now, or maybe always?
-  // "after I start timer and move to another page" -> implies it should be running.
-  if (!isActive && timeLeft === 25 * 60) return null; // Hide if default state? Maybe better to hide if not active.
+  if (!isActive && timeLeft === 25 * 60) return null;
 
   const radius = 10;
   const circumference = 2 * Math.PI * radius;

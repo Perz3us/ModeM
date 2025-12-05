@@ -11,26 +11,26 @@ export class RemindersController {
 
   @Post()
   create(@Request() req, @Body() createReminderDto: CreateReminderDto) {
-    return this.remindersService.create(req.user.sub, createReminderDto);
+    return this.remindersService.create(req.user.id, createReminderDto);
   }
 
   @Get()
   findAll(@Request() req) {
-    return this.remindersService.findAll(req.user.sub);
+    return this.remindersService.findAll(req.user.id);
   }
 
   @Get(':id')
   findOne(@Request() req, @Param('id') id: string) {
-    return this.remindersService.findOne(+id, req.user.sub);
+    return this.remindersService.findOne(+id, req.user.id);
   }
 
   @Patch(':id')
   update(@Request() req, @Param('id') id: string, @Body() updateReminderDto: UpdateReminderDto) {
-    return this.remindersService.update(+id, req.user.sub, updateReminderDto);
+    return this.remindersService.update(+id, req.user.id, updateReminderDto);
   }
 
   @Delete(':id')
   remove(@Request() req, @Param('id') id: string) {
-    return this.remindersService.remove(+id, req.user.sub);
+    return this.remindersService.remove(+id, req.user.id);
   }
 }

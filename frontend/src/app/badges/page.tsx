@@ -72,19 +72,19 @@ export default function BadgesPage() {
   };
 
   return (
-    <div className="container">
-      <header style={{ marginBottom: '2rem' }}>
-        <h1 style={{ fontSize: '2rem', fontWeight: 'bold', marginBottom: '0.5rem' }}>Achievements</h1>
-        <p style={{ color: 'var(--text-muted)' }}>Track your progress and earn badges.</p>
+    <div className="container animate-fade-in">
+      <header style={{ marginBottom: '3rem' }}>
+        <h1 style={{ fontSize: '2.5rem', fontWeight: '800', marginBottom: '0.5rem' }}>Achievements</h1>
+        <p style={{ color: 'hsl(var(--muted-foreground))', fontSize: '1.1rem' }}>Track your progress and earn badges.</p>
       </header>
 
       {loading ? (
-        <div style={{ textAlign: 'center', padding: '4rem', color: 'var(--text-muted)' }}>Loading badges...</div>
+        <div style={{ textAlign: 'center', padding: '4rem', color: 'hsl(var(--muted-foreground))' }}>Loading badges...</div>
       ) : (
         <div style={{ 
           display: 'grid', 
           gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', 
-          gap: '1.5rem' 
+          gap: '2rem' 
         }}>
           {ALL_BADGES.map((badge) => {
             const earned = isEarned(badge.name);
@@ -97,16 +97,30 @@ export default function BadgesPage() {
                   flexDirection: 'column', 
                   alignItems: 'center', 
                   textAlign: 'center',
-                  opacity: earned ? 1 : 0.7,
-                  border: earned ? '1px solid var(--card-border)' : '1px dashed var(--card-border)',
-                  background: earned ? 'var(--card-bg)' : 'transparent'
+                  opacity: earned ? 1 : 0.6,
+                  borderColor: earned ? 'hsl(var(--primary) / 0.5)' : undefined,
+                  background: earned ? 'hsl(var(--card) / 0.8)' : undefined,
+                  position: 'relative',
+                  overflow: 'hidden'
                 }}
               >
+                {earned && (
+                  <div style={{
+                    position: 'absolute',
+                    top: 0,
+                    left: 0,
+                    right: 0,
+                    height: '4px',
+                    background: 'linear-gradient(90deg, hsl(var(--primary)), hsl(var(--secondary)))'
+                  }} />
+                )}
+
                 <div style={{ 
-                  fontSize: '3rem', 
-                  marginBottom: '1rem',
-                  filter: earned ? 'none' : 'grayscale(100%)',
-                  position: 'relative'
+                  fontSize: '3.5rem', 
+                  marginBottom: '1.5rem',
+                  filter: earned ? 'none' : 'grayscale(100%) opacity(0.5)',
+                  position: 'relative',
+                  marginTop: '1rem'
                 }}>
                   {badge.icon}
                   {!earned && (
@@ -114,35 +128,38 @@ export default function BadgesPage() {
                       position: 'absolute', 
                       bottom: -5, 
                       right: -5, 
-                      background: 'var(--bg-color)', 
+                      background: 'hsl(var(--background))', 
                       borderRadius: '50%', 
-                      padding: '0.25rem',
-                      boxShadow: '0 2px 4px rgba(0,0,0,0.2)'
+                      padding: '0.35rem',
+                      boxShadow: '0 4px 6px rgba(0,0,0,0.3)',
+                      border: '1px solid hsl(var(--border))'
                     }}>
-                      <Lock size={16} color="var(--text-muted)" />
+                      <Lock size={16} color="hsl(var(--muted-foreground))" />
                     </div>
                   )}
                 </div>
                 
-                <h3 style={{ fontSize: '1.25rem', fontWeight: 'bold', marginBottom: '0.5rem' }}>
+                <h3 style={{ fontSize: '1.25rem', fontWeight: '700', marginBottom: '0.5rem' }}>
                   {badge.name}
                 </h3>
                 
-                <p style={{ color: 'var(--text-muted)', fontSize: '0.875rem', marginBottom: '1rem' }}>
+                <p style={{ color: 'hsl(var(--muted-foreground))', fontSize: '0.9rem', marginBottom: '1.5rem', flex: 1 }}>
                   {badge.description}
                 </p>
 
                 {earned ? (
                   <div style={{ 
                     marginTop: 'auto', 
-                    padding: '0.25rem 0.75rem', 
-                    borderRadius: '1rem', 
-                    background: 'rgba(16, 185, 129, 0.1)', 
-                    color: 'var(--success)',
-                    fontSize: '0.75rem',
+                    padding: '0.35rem 1rem', 
+                    borderRadius: '9999px', 
+                    background: 'hsl(var(--primary) / 0.1)', 
+                    color: 'hsl(var(--primary))',
+                    fontSize: '0.8rem',
+                    fontWeight: '600',
                     display: 'flex',
                     alignItems: 'center',
-                    gap: '0.25rem'
+                    gap: '0.35rem',
+                    border: '1px solid hsl(var(--primary) / 0.2)'
                   }}>
                     <Award size={14} />
                     Earned {getEarnedDate(badge.name)}
@@ -150,8 +167,8 @@ export default function BadgesPage() {
                 ) : (
                   <div style={{ 
                     marginTop: 'auto', 
-                    fontSize: '0.75rem', 
-                    color: 'var(--text-muted)',
+                    fontSize: '0.8rem', 
+                    color: 'hsl(var(--muted-foreground))',
                     fontStyle: 'italic'
                   }}>
                     Locked

@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { X } from 'lucide-react';
 import api from '@/services/api';
 import toast from 'react-hot-toast';
@@ -13,8 +14,14 @@ interface EditSubjectModalProps {
 }
 
 export default function EditSubjectModal({ isOpen, onClose, onSuccess, subject }: EditSubjectModalProps) {
+  const [mounted, setMounted] = useState(false);
   const [name, setName] = useState('');
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+    return () => setMounted(false);
+  }, []);
 
   useEffect(() => {
     if (subject) {
@@ -23,6 +30,7 @@ export default function EditSubjectModal({ isOpen, onClose, onSuccess, subject }
   }, [subject]);
 
   if (!isOpen || !subject) return null;
+  if (!mounted) return null;
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -40,20 +48,9 @@ export default function EditSubjectModal({ isOpen, onClose, onSuccess, subject }
     }
   };
 
-  return (
-    <div style={{
-      position: 'fixed',
-      top: 0,
-      left: 0,
-      right: 0,
-      bottom: 0,
-      background: 'rgba(0, 0, 0, 0.5)',
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      zIndex: 1000
-    }}>
-      <div className="card" style={{ width: '100%', maxWidth: '400px', position: 'relative' }}>
+  return createPortal(
+    <div className="modal-overlay">
+      <div className="modal-card">
         <button 
           onClick={onClose}
           style={{
@@ -62,7 +59,7 @@ export default function EditSubjectModal({ isOpen, onClose, onSuccess, subject }
             right: '1rem',
             background: 'transparent',
             border: 'none',
-            color: 'var(--text-muted)',
+            color: 'hsl(var(--muted-foreground))',
             cursor: 'pointer'
           }}
         >
@@ -73,7 +70,7 @@ export default function EditSubjectModal({ isOpen, onClose, onSuccess, subject }
         
         <form onSubmit={handleSubmit}>
           <div style={{ marginBottom: '1.5rem' }}>
-            <label style={{ display: 'block', marginBottom: '0.5rem', color: 'var(--text-muted)' }}>
+            <label style={{ display: 'block', marginBottom: '0.5rem', color: 'hsl(var(--muted-foreground))' }}>
               Subject Name
             </label>
             <input
@@ -83,7 +80,14 @@ export default function EditSubjectModal({ isOpen, onClose, onSuccess, subject }
               className="input"
               required
               placeholder="e.g. Mathematics"
-              style={{ width: '100%', padding: '0.75rem', borderRadius: '0.5rem', background: 'rgba(255,255,255,0.05)', border: '1px solid var(--card-border)', color: 'var(--foreground)' }}
+              style={{ 
+                width: '100%', 
+                padding: '0.75rem', 
+                borderRadius: '0.5rem', 
+                background: 'rgba(255,255,255,0.05)', 
+                border: '1px solid hsl(var(--border))', 
+                color: 'hsl(var(--foreground))' 
+              }}
             />
           </div>
           
@@ -92,7 +96,11 @@ export default function EditSubjectModal({ isOpen, onClose, onSuccess, subject }
               type="button" 
               onClick={onClose}
               className="btn"
-              style={{ background: 'transparent', border: '1px solid var(--card-border)' }}
+              style={{ 
+                background: 'transparent', 
+                border: '1px solid hsl(var(--border))',
+                color: 'hsl(var(--foreground))'
+              }}
             >
               Cancel
             </button>
@@ -106,6 +114,7 @@ export default function EditSubjectModal({ isOpen, onClose, onSuccess, subject }
           </div>
         </form>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 }

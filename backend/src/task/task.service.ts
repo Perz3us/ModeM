@@ -78,7 +78,10 @@ export class TaskService {
       isCompleted?: boolean;
       dueSoon?: boolean;
     },
+    page: number = 1,
+    limit: number = 10,
   ) {
+    const skip = (page - 1) * limit;
     const where: any = { userId };
 
     if (filters.subjectId) where.SubjectId = filters.subjectId;
@@ -108,6 +111,8 @@ export class TaskService {
         { priority: 'desc' },
         { createdAt: 'desc' },
       ],
+      skip,
+      take: limit,
     });
   }
 

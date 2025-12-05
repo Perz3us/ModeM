@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Param, Delete, UseGuards, Request } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Delete, UseGuards, Request, Query } from '@nestjs/common';
 import { StudySessionsService } from './study-sessions.service';
 import { CreateSessionDto } from './dto/create-session.dto';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
@@ -14,8 +14,9 @@ export class StudySessionsController {
   }
 
   @Get()
-  findAll(@Request() req) {
-    return this.studySessionsService.findAll(req.user.id);
+  @Get()
+  findAll(@Request() req, @Query('page') page: string = '1', @Query('limit') limit: string = '10') {
+    return this.studySessionsService.findAll(req.user.id, +page, +limit);
   }
 
   @Get(':id')

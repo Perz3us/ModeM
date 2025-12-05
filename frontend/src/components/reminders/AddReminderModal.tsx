@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { X, Calendar, Clock, Repeat, BookOpen } from 'lucide-react';
 import api from '@/services/api';
 import toast from 'react-hot-toast';
@@ -18,6 +19,7 @@ interface AddReminderModalProps {
 }
 
 export default function AddReminderModal({ isOpen, onClose, onReminderAdded }: AddReminderModalProps) {
+  const [mounted, setMounted] = useState(false);
   const [title, setTitle] = useState('');
   const [date, setDate] = useState('');
   const [time, setTime] = useState('');
@@ -26,6 +28,11 @@ export default function AddReminderModal({ isOpen, onClose, onReminderAdded }: A
   const [recurrencePattern, setRecurrencePattern] = useState('DAILY');
   const [subjects, setSubjects] = useState<Subject[]>([]);
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+    return () => setMounted(false);
+  }, []);
 
   useEffect(() => {
     if (isOpen) {
@@ -79,39 +86,32 @@ export default function AddReminderModal({ isOpen, onClose, onReminderAdded }: A
   };
 
   if (!isOpen) return null;
+  if (!mounted) return null;
 
-  return (
-    <div style={{
-      position: 'fixed',
-      top: 0,
-      left: 0,
-      right: 0,
-      bottom: 0,
-      background: 'rgba(0, 0, 0, 0.5)',
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      zIndex: 1000
-    }}>
-      <div className="card" style={{ width: '100%', maxWidth: '500px', position: 'relative', maxHeight: '90vh', overflowY: 'auto' }}>
-        <div className="modal-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
-          <h2 style={{ fontSize: '1.5rem', fontWeight: 'bold' }}>Set Reminder</h2>
-          <button 
-            onClick={onClose} 
-            style={{
-              background: 'transparent',
-              border: 'none',
-              color: 'var(--text-muted)',
-              cursor: 'pointer'
-            }}
-          >
-            <X size={20} />
-          </button>
-        </div>
+  return createPortal(
+    <div className="modal-overlay">
+      <div className="modal-card">
+        <button 
+          onClick={onClose} 
+          style={{
+            position: 'absolute',
+            top: '1rem',
+            right: '1rem',
+            background: 'transparent',
+            border: 'none',
+            color: 'hsl(var(--muted-foreground))',
+            cursor: 'pointer',
+            zIndex: 10
+          }}
+        >
+          <X size={20} />
+        </button>
+
+        <h2 style={{ fontSize: '1.5rem', fontWeight: 'bold', marginBottom: '1.5rem' }}>Set Reminder</h2>
 
         <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
           <div>
-            <label style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.875rem', color: 'var(--text-muted)' }}>
+            <label style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.875rem', color: 'hsl(var(--muted-foreground))' }}>
               What do you need to remember?
             </label>
             <input
@@ -127,7 +127,7 @@ export default function AddReminderModal({ isOpen, onClose, onReminderAdded }: A
 
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
             <div>
-              <label style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.875rem', color: 'var(--text-muted)' }}>
+              <label style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.875rem', color: 'hsl(var(--muted-foreground))' }}>
                 Date
               </label>
               <div style={{ position: 'relative' }}>
@@ -138,11 +138,11 @@ export default function AddReminderModal({ isOpen, onClose, onReminderAdded }: A
                   className="input"
                   style={{ width: '100%', paddingLeft: '2.5rem' }}
                 />
-                <Calendar size={18} style={{ position: 'absolute', left: '0.75rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)' }} />
+                <Calendar size={18} style={{ position: 'absolute', left: '0.75rem', top: '50%', transform: 'translateY(-50%)', color: 'hsl(var(--muted-foreground))' }} />
               </div>
             </div>
             <div>
-              <label style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.875rem', color: 'var(--text-muted)' }}>
+              <label style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.875rem', color: 'hsl(var(--muted-foreground))' }}>
                 Time
               </label>
               <div style={{ position: 'relative' }}>
@@ -153,13 +153,13 @@ export default function AddReminderModal({ isOpen, onClose, onReminderAdded }: A
                   className="input"
                   style={{ width: '100%', paddingLeft: '2.5rem' }}
                 />
-                <Clock size={18} style={{ position: 'absolute', left: '0.75rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)' }} />
+                <Clock size={18} style={{ position: 'absolute', left: '0.75rem', top: '50%', transform: 'translateY(-50%)', color: 'hsl(var(--muted-foreground))' }} />
               </div>
             </div>
           </div>
 
           <div>
-            <label style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.875rem', color: 'var(--text-muted)' }}>
+            <label style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.875rem', color: 'hsl(var(--muted-foreground))' }}>
               Subject (Optional)
             </label>
             <div style={{ position: 'relative' }}>
@@ -167,16 +167,25 @@ export default function AddReminderModal({ isOpen, onClose, onReminderAdded }: A
                 value={subjectId || ''}
                 onChange={(e) => setSubjectId(e.target.value ? Number(e.target.value) : null)}
                 className="input"
-                style={{ width: '100%', paddingLeft: '2.5rem', appearance: 'none' }}
+                style={{ 
+                  width: '100%', 
+                  padding: '0.75rem 1rem 0.75rem 2.5rem',
+                  appearance: 'none',
+                  cursor: 'pointer',
+                  background: 'hsl(var(--card))',
+                  border: '1px solid hsl(var(--border))',
+                  color: 'hsl(var(--foreground))',
+                  borderRadius: 'var(--radius)',
+                }}
               >
-                <option value="">No Subject</option>
+                <option value="" style={{ color: 'hsl(var(--muted-foreground))' }}>No Subject</option>
                 {subjects.map((subject) => (
-                  <option key={subject.id} value={subject.id}>
+                  <option key={subject.id} value={subject.id} style={{ background: 'hsl(var(--card))', color: 'hsl(var(--foreground))' }}>
                     {subject.name}
                   </option>
                 ))}
               </select>
-              <BookOpen size={18} style={{ position: 'absolute', left: '0.75rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)', pointerEvents: 'none' }} />
+              <BookOpen size={18} style={{ position: 'absolute', left: '0.75rem', top: '50%', transform: 'translateY(-50%)', color: 'hsl(var(--muted-foreground))', pointerEvents: 'none' }} />
             </div>
           </div>
 
@@ -193,7 +202,7 @@ export default function AddReminderModal({ isOpen, onClose, onReminderAdded }: A
 
           {isRecurring && (
             <div>
-              <label style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.875rem', color: 'var(--text-muted)' }}>
+              <label style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.875rem', color: 'hsl(var(--muted-foreground))' }}>
                 Frequency
               </label>
               <div style={{ position: 'relative' }}>
@@ -201,18 +210,36 @@ export default function AddReminderModal({ isOpen, onClose, onReminderAdded }: A
                   value={recurrencePattern}
                   onChange={(e) => setRecurrencePattern(e.target.value)}
                   className="input"
-                  style={{ width: '100%', paddingLeft: '2.5rem', appearance: 'none' }}
+                  style={{ 
+                    width: '100%', 
+                    padding: '0.75rem 1rem 0.75rem 2.5rem',
+                    appearance: 'none',
+                    cursor: 'pointer',
+                    background: 'hsl(var(--card))',
+                    border: '1px solid hsl(var(--border))',
+                    color: 'hsl(var(--foreground))',
+                    borderRadius: 'var(--radius)',
+                  }}
                 >
-                  <option value="DAILY">Daily</option>
-                  <option value="WEEKLY">Weekly</option>
+                  <option value="DAILY" style={{ background: 'hsl(var(--card))' }}>Daily</option>
+                  <option value="WEEKLY" style={{ background: 'hsl(var(--card))' }}>Weekly</option>
                 </select>
-                <Repeat size={18} style={{ position: 'absolute', left: '0.75rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)', pointerEvents: 'none' }} />
+                <Repeat size={18} style={{ position: 'absolute', left: '0.75rem', top: '50%', transform: 'translateY(-50%)', color: 'hsl(var(--muted-foreground))', pointerEvents: 'none' }} />
               </div>
             </div>
           )}
 
           <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '1rem', marginTop: '1rem' }}>
-            <button type="button" onClick={onClose} className="btn" style={{ background: 'transparent', border: '1px solid var(--card-border)' }}>
+            <button 
+              type="button" 
+              onClick={onClose} 
+              className="btn" 
+              style={{ 
+                background: 'transparent', 
+                border: '1px solid hsl(var(--border))',
+                color: 'hsl(var(--foreground))'
+              }}
+            >
               Cancel
             </button>
             <button type="submit" className="btn btn-primary" disabled={loading}>
@@ -221,6 +248,7 @@ export default function AddReminderModal({ isOpen, onClose, onReminderAdded }: A
           </div>
         </form>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 }

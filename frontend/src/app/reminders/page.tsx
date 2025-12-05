@@ -172,7 +172,9 @@ export default function RemindersPage() {
                 <button 
                   onClick={() => handleDeleteClick(reminder)}
                   className="btn-icon"
-                  style={{ color: 'var(--danger)' }}
+                  style={{ color: 'hsl(var(--destructive))' }}
+                  onMouseEnter={(e) => { e.currentTarget.style.background = 'hsl(var(--destructive) / 0.1)'; }}
+                  onMouseLeave={(e) => { e.currentTarget.style.background = 'transparent'; }}
                   title="Delete"
                 >
                   <Trash2 size={18} />

@@ -30,24 +30,18 @@ export class ProgressService {
   }
   async getStats(userId: number) {
     const now = new Date();
-    const startOfWeek = new Date(now.getFullYear(), now.getMonth(), now.getDate() - 6); // Last 7 days
+    const startOfWeek = new Date(now.getFullYear(), now.getMonth(), now.getDate() - 6);
 
-    // 1. Total Study Time
     const studySessions = await this.prisma.studySession.findMany({
       where: { userId },
     });
     const totalStudyTimeSeconds = studySessions.reduce((acc, session) => acc + session.duration, 0);
     const totalStudyTimeHours = Math.round(totalStudyTimeSeconds / 3600);
 
-    // 2. Tasks Completed
     const tasksCompleted = await this.prisma.task.count({
       where: { userId, isCompleted: true },
     });
 
-    // 3. Streak (Simplified: Count consecutive days with activity going back from today)
-    // For a real app, this would be more complex.
-    // Let's just mock it or calculate based on unique days in studySessions/tasks
-    // For now, let's calculate active days in the last 30 days
     const thirtyDaysAgo = new Date(now);
     thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
     
@@ -57,10 +51,8 @@ export class ProgressService {
         activeDays.add(s.createdAt.toISOString().split('T')[0]);
       }
     });
-    // This is "Active Days in last 30 days", not exactly streak, but good enough for MVP
     const streak = activeDays.size; 
 
-    // 4. Weekly Activity
     const weeklyActivity: { name: string; hours: number }[] = [];
     const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
     
@@ -75,11 +67,10 @@ export class ProgressService {
       
       weeklyActivity.unshift({
         name: dayName,
-        hours: Math.round((daySeconds / 3600) * 10) / 10 // 1 decimal place
+        hours: Math.round((daySeconds / 3600) * 10) / 10
       });
     }
 
-    // 5. Subject Distribution
     const subjects = await this.prisma.subject.findMany({
       where: { userId },
       include: { studySessions: true }
@@ -93,7 +84,7 @@ export class ProgressService {
         value: Math.round((subjectSeconds / 3600) * 10) / 10,
         color: colors[index % colors.length]
       };
-    }).filter(s => s.value > 0); // Only show subjects with study time
+    }).filter(s => s.value > 0);
 
     return {
       totalStudyTime: totalStudyTimeHours,

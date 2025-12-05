@@ -1,46 +1,192 @@
 .container {
-  max-width: 1200px;
-  margin: 0 auto;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 2rem;
+  background: radial-gradient(circle at top center, hsl(var(--primary) / 0.15), transparent 60%);
+  position: relative;
+  overflow: hidden;
 }
 
-.header {
-  margin-bottom: 3rem;
+.heroContent {
+  z-index: 10;
+  max-width: 800px;
+  animation: fadeUp 1s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
 }
 
-.header h1 {
-  font-size: 2.5rem;
+.badge {
+  display: inline-block;
+  padding: 0.5rem 1.5rem;
+  background: hsl(var(--secondary) / 0.2);
+  border: 1px solid hsl(var(--secondary) / 0.3);
+  border-radius: 2rem;
+  color: hsl(var(--secondary));
+  font-weight: 600;
+  font-size: 0.875rem;
+  margin-bottom: 1.5rem;
+  backdrop-filter: blur(8px);
+  box-shadow: 0 4px 20px hsl(var(--secondary) / 0.1);
+}
+
+.title {
+  font-size: 4rem;
   font-weight: 800;
-  margin-bottom: 0.5rem;
-  background: linear-gradient(to right, #fff, #94a3b8);
+  line-height: 1.1;
+  margin-bottom: 1.5rem;
+  background: linear-gradient(135deg, #fff 0%, #94a3b8 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
+  letter-spacing: -0.02em;
 }
 
 .subtitle {
-  color: var(--text-muted);
-  font-size: 1.1rem;
+  font-size: 1.25rem;
+  color: hsl(var(--muted-foreground));
+  margin-bottom: 3rem;
+  line-height: 1.6;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
-.grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 2rem;
-}
-
-.stat {
-  margin-top: 1rem;
+.buttonGroup {
   display: flex;
-  align-items: baseline;
-  gap: 0.5rem;
+  gap: 1.5rem;
+  justify-content: center;
+  margin-bottom: 4rem;
 }
 
-.number {
-  font-size: 3rem;
-  font-weight: 700;
-  color: var(--primary);
-}
-
-.label {
-  color: var(--text-muted);
+.primaryBtn, .secondaryBtn {
+  padding: 1rem 2.5rem;
+  border-radius: 2rem;
+  font-weight: 600;
   font-size: 1rem;
+  transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+  text-decoration: none;
+  position: relative;
+  overflow: hidden;
+}
+
+.primaryBtn {
+  background: hsl(var(--primary));
+  color: hsl(var(--primary-foreground));
+  box-shadow: 0 8px 20px -4px hsl(var(--primary) / 0.5);
+}
+
+.primaryBtn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 24px -4px hsl(var(--primary) / 0.6);
+}
+
+.secondaryBtn {
+  background: transparent;
+  color: hsl(var(--foreground));
+  border: 1px solid hsl(var(--border));
+  backdrop-filter: blur(10px);
+}
+
+.secondaryBtn:hover {
+  background: hsl(var(--accent));
+  border-color: hsl(var(--accent));
+  transform: translateY(-2px);
+}
+
+.features {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 2rem;
+  width: 100%;
+  max-width: 1200px;
+  margin-top: 2rem;
+}
+
+.featureCard {
+  background: hsl(var(--card) / 0.4);
+  border: 1px solid hsl(var(--border) / 0.5);
+  padding: 2rem;
+  border-radius: 1.5rem;
+  text-align: left;
+  backdrop-filter: blur(12px);
+  transition: all 0.3s ease;
+  animation: fadeUp 1s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+  opacity: 0;
+}
+
+.featureCard:hover {
+  background: hsl(var(--card) / 0.6);
+  border-color: hsl(var(--primary) / 0.3);
+  transform: translateY(-4px);
+  box-shadow: 0 8px 30px hsl(var(--primary) / 0.05);
+}
+
+.featureIcon {
+  width: 3rem;
+  height: 3rem;
+  background: hsl(var(--primary) / 0.1);
+  border-radius: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: hsl(var(--primary));
+  margin-bottom: 1.5rem;
+  font-size: 1.5rem;
+}
+
+.featureTitle {
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin-bottom: 0.75rem;
+  color: hsl(var(--foreground));
+}
+
+.featureDesc {
+  color: hsl(var(--muted-foreground));
+  line-height: 1.5;
+}
+
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Background Abstract Shapes */
+.blob {
+  position: absolute;
+  filter: blur(80px);
+  z-index: 0;
+  opacity: 0.4;
+  animation: float 20s infinite ease-in-out;
+}
+
+.blob1 {
+  top: -10%;
+  left: -10%;
+  width: 50vw;
+  height: 50vw;
+  background: hsl(var(--primary));
+}
+
+.blob2 {
+  bottom: -20%;
+  right: -10%;
+  width: 60vw;
+  height: 60vw;
+  background: hsl(var(--secondary));
+  animation-delay: -5s;
+}
+
+@keyframes float {
+  0% { transform: translate(0, 0) rotate(0deg); }
+  33% { transform: translate(30px, -50px) rotate(10deg); }
+  66% { transform: translate(-20px, 20px) rotate(-5deg); }
+  100% { transform: translate(0, 0) rotate(0deg); }
 }
