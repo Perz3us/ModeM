@@ -7,18 +7,16 @@ ModeM is a comprehensive, premium study companion application designed to help s
 
 ## 🚀 Key Features
 
-### ✨ **New! Premium Experience**
--   **Stunning Landing Page**: A visually immersive welcome page with animated backgrounds and glassmorphism design.
 -   **One-Click Startup**: Launch the entire ecosystem (Frontend, Backend, WhatsApp Service) with a single script (`start-all.bat`).
 
-### 📱 **WhatsApp Integration (New!)**
+### 📱 **WhatsApp Integration **
 -   **Smart Reminders**: Get instant WhatsApp notifications for upcoming exams and deadlines.
 -   **Profile Management**: Link and update your WhatsApp number directly from your profile settings.
 -   **Automated Alerts**: Never miss a study session with direct mobile alerts.
 
 ### ⏱️ **Advanced Focus Timer**
 -   **Floating Timer**: A persistent, draggable timer that stays with you as you navigate the app.
--   **Custom Modes**: Pomodoro, Short Break, Long Break, or Custom durations.
+-   **Custom Modes**: Short Break, Long Break, or Custom durations.
 -   **Audio Feedback**: Satisfying completion sounds and notifications.
 -   **Session Tracking**: Automatically logs study time to your daily progress.
 
