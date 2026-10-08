@@ -5,34 +5,34 @@ ModeM is a comprehensive, premium study companion application designed to help s
 <img width="1896" height="855" alt="image" src="https://github.com/user-attachments/assets/af67e298-30b8-4f57-ac4b-852a8252e223" />
 
 
-## 🚀 Key Features
+## Key Features
 
 -   **One-Click Startup**: Launch the entire ecosystem (Frontend, Backend, WhatsApp Service) with a single script (`start-all.bat`).
 
-### 📱 **WhatsApp Integration **
+### **WhatsApp Integration **
 -   **Smart Reminders**: Get instant WhatsApp notifications for upcoming exams and deadlines.
 -   **Profile Management**: Link and update your WhatsApp number directly from your profile settings.
 -   **Automated Alerts**: Never miss a study session with direct mobile alerts.
 
-### ⏱️ **Advanced Focus Timer**
+### **Advanced Focus Timer**
 -   **Floating Timer**: A persistent, draggable timer that stays with you as you navigate the app.
 -   **Custom Modes**: Short Break, Long Break, or Custom durations.
 -   **Audio Feedback**: Satisfying completion sounds and notifications.
 -   **Session Tracking**: Automatically logs study time to your daily progress.
 
-### ✅ **Task & Subject Management**
+### **Task & Subject Management**
 -   **Organize**: Create tasks, set priorities (High, Medium, Low), and assign due dates.
 -   **Course Hub**: Centralized view for all your subjects, notes, and exams.
 -   **Visual Filters**: Easily sort and filter tasks to focus on what matters.
 
-### 📊 **Analytics & Gamification**
+### **Analytics & Gamification**
 -   **Real-time Dashboard**: View streaks, focus hours, and task completion rates instantly.
 -   **Badges System**: Earn unique badges ("Night Owl", "Focus Master") as you hit milestones.
 -   **Progress Charts**: Beautiful interactive charts to visualize your productivity trends.
 
 ---
 
-## 🛠️ Tech Stack
+## Tech Stack
 
 ### **Frontend**
 -   **Framework**: [Next.js 14](https://nextjs.org/) (App Router)
@@ -51,14 +51,14 @@ ModeM is a comprehensive, premium study companion application designed to help s
 
 ---
 
-## 🏃‍♂️ Getting Started
+## Getting Started
 
 ### Prerequisites
 -   Node.js (v18+)
 -   PostgreSQL installed and running
 -   A smartphone with WhatsApp (for syncing)
 
-### 🚀 Quick Start (Windows)
+### Quick Start (Windows)
 We've made it incredibly easy to start!
 
 1.  **Clone the repository**
@@ -76,7 +76,7 @@ We've made it incredibly easy to start!
     
     *This will automatically open 3 terminal windows for the Backend, Frontend, and WhatsApp Service.*
 
-### 📦 Manual Installation (Optional)
+### Manual Installation (Optional)
 
 If you prefer to run services individually:
 
